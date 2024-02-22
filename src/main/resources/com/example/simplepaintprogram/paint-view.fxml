@@ -14,21 +14,23 @@
     <padding>
         <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
     </padding>
-   <HBox spacing="10.0">
-      <children>
-          <Button fx:id="rectangleButton" onAction="#onRectangleButtonClick">
-            <graphic>
-               <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="30.0" stroke="BLACK" strokeType="INSIDE" width="45.0" />
-            </graphic></Button>
-         <Button fx:id="circleButton" onAction="#onCircleButtonClick">
-            <graphic>
-               <Circle fill="DODGERBLUE" radius="15.0" stroke="BLACK" strokeType="INSIDE" />
-            </graphic></Button>
-         <ColorPicker fx:id="colorPicker">
-            <value>
-               <Color />
-            </value></ColorPicker>
-      </children>
-   </HBox>
+    <HBox spacing="10.0">
+        <Button fx:id="rectangleButton" onAction="#onRectangleButtonClick">
+          <graphic>
+              <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="30.0" stroke="BLACK"
+                         strokeType="INSIDE" width="45.0"/>
+          </graphic>
+        </Button>
+        <Button fx:id="circleButton" onAction="#onCircleButtonClick">
+           <graphic>
+               <Circle fill="DODGERBLUE" radius="15.0" stroke="BLACK" strokeType="INSIDE"/>
+           </graphic>
+        </Button>
+        <ColorPicker fx:id="colorPicker">
+           <value>
+               <Color/>
+           </value>
+        </ColorPicker>
+    </HBox>
    <Canvas fx:id="canvas" height="556.0" onMouseClicked="#onCanvasClicked" width="556.0" />
 </VBox>

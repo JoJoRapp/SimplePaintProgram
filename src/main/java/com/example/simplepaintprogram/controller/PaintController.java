@@ -6,7 +6,6 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.ColorPicker;
-import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
@@ -36,14 +35,14 @@ public class PaintController {
     }
 
     @FXML
-    public void onRectangleButtonClick(ActionEvent actionEvent) {
+    public void onRectangleButtonClick() {
         rectangleButton.setDisable(true);
         circleButton.setDisable(false);
         mode = "rect";
     }
 
     @FXML
-    public void onCircleButtonClick(ActionEvent actionEvent) {
+    public void onCircleButtonClick() {
         circleButton.setDisable(true);
         rectangleButton.setDisable(false);
         mode = "circle";
@@ -60,7 +59,5 @@ public class PaintController {
             graphicsContext.fillOval(circle.getCenterX(), circle.getCenterY(), circle.getRadius() * 2, circle.getRadius() * 2);
             graphicsContext.strokeOval(circle.getCenterX(), circle.getCenterY(), circle.getRadius() * 2, circle.getRadius() * 2);
         }
-
-
     }
 }
