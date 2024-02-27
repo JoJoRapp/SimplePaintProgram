@@ -65,12 +65,12 @@ public class PaintController {
 
     public void onCanvasClicked(MouseEvent mouseEvent) {
         if (mode.equals("rect")) {
-            RectangleEditable rectangle = new RectangleEditable(mouseEvent.getX(), mouseEvent.getY(), 50, 60);
+            RectangleEditable rectangle = new RectangleEditable(mouseEvent.getX(), mouseEvent.getY(), widthSpinner.getValue(), heightSpinner.getValue());
             rectangle.setFill(graphicsContext.getFill());
-            graphicsContext.fillRect(rectangle.getX(), rectangle.getY(), 50, 60);
-            graphicsContext.strokeRect(rectangle.getX(), rectangle.getY(), 50, 60);
+            graphicsContext.fillRect(rectangle.getX(), rectangle.getY(), rectangle.getWidth(), rectangle.getHeight());
+            graphicsContext.strokeRect(rectangle.getX(), rectangle.getY(), rectangle.getWidth(), rectangle.getHeight());
         } else if (mode.equals("circle")) {
-            CircleEditable circle = new CircleEditable(mouseEvent.getX(), mouseEvent.getY(), 25, graphicsContext.getFill());
+            CircleEditable circle = new CircleEditable(mouseEvent.getX(), mouseEvent.getY(), radiusSpinner.getValue(), graphicsContext.getFill());
             graphicsContext.fillOval(circle.getCenterX(), circle.getCenterY(), circle.getRadius() * 2, circle.getRadius() * 2);
             graphicsContext.strokeOval(circle.getCenterX(), circle.getCenterY(), circle.getRadius() * 2, circle.getRadius() * 2);
         }
