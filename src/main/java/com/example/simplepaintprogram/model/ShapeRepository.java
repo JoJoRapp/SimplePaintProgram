@@ -22,7 +22,7 @@ public class ShapeRepository {
     public Shape getSelectedShape(MouseEvent mouseEvent) {
         for (int i = shapes.size() - 1; i >= 0; i--) {
             Shape currentShape = shapes.get(i);
-            Class shapeClass = currentShape.getClass();
+            Class<? extends Shape> shapeClass = currentShape.getClass();
             if (shapeClass.equals(CircleEditable.class)) {
                 CircleEditable circle = (CircleEditable) currentShape;
                 if (circle.wasClicked(mouseEvent)) {
@@ -41,7 +41,7 @@ public class ShapeRepository {
     public void drawShapes(GraphicsContext graphicsContext) {
         for (Shape s : shapes) {
             graphicsContext.setFill(s.getFill());
-            Class shapeClass = s.getClass();
+            Class<? extends Shape> shapeClass = s.getClass();
             if (shapeClass.equals(CircleEditable.class)) {
                 CircleEditable circle = (CircleEditable) s;
                 circle.draw(graphicsContext);
