@@ -18,11 +18,7 @@ import javafx.scene.shape.Shape;
 public class PaintController {
 
     @FXML
-    private Spinner<Double> widthSpinner;
-    @FXML
-    private Spinner<Double> heightSpinner;
-    @FXML
-    private Spinner<Double> radiusSpinner;
+    private Canvas canvas;
 
     @FXML
     private ColorPicker colorPicker;
@@ -33,7 +29,15 @@ public class PaintController {
     private Button rectangleButton;
 
     @FXML
-    private Canvas canvas;
+    private Spinner<Double> widthSpinner;
+    @FXML
+    private Spinner<Double> heightSpinner;
+    @FXML
+    private Spinner<Double> radiusSpinner;
+
+    private SpinnerValueFactory.DoubleSpinnerValueFactory widthSpinnerValueFactory;
+    private SpinnerValueFactory.DoubleSpinnerValueFactory heightSpinnerValueFactory;
+    private SpinnerValueFactory.DoubleSpinnerValueFactory radiusSpinnerValueFactory;
 
     private GraphicsContext graphicsContext;
 
@@ -57,12 +61,34 @@ public class PaintController {
             }
         });
 
-        widthSpinner.setValueFactory(new SpinnerValueFactory.DoubleSpinnerValueFactory(0, Double.MAX_VALUE));
-        heightSpinner.setValueFactory(new SpinnerValueFactory.DoubleSpinnerValueFactory(0, Double.MAX_VALUE));
-        radiusSpinner.setValueFactory(new SpinnerValueFactory.DoubleSpinnerValueFactory(0, Double.MAX_VALUE));
+        widthSpinnerValueFactory = new SpinnerValueFactory.DoubleSpinnerValueFactory(0, Double.MAX_VALUE);
+        widthSpinner.setValueFactory(widthSpinnerValueFactory);
+        heightSpinnerValueFactory = new SpinnerValueFactory.DoubleSpinnerValueFactory(0, Double.MAX_VALUE);
+        heightSpinner.setValueFactory(heightSpinnerValueFactory);
+        radiusSpinnerValueFactory = new SpinnerValueFactory.DoubleSpinnerValueFactory(0, Double.MAX_VALUE);
+        radiusSpinner.setValueFactory(radiusSpinnerValueFactory);
 
         shapeFactory = new ShapeFactory();
         shapeRepository = new ShapeRepository();
+
+        widthSpinner.valueProperty().addListener((observable, oldValue, newValue) -> {
+            if (mode.equalsIgnoreCase("select")) {
+                graphicsContext.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+                shapeRepository.drawShapes(graphicsContext);
+            }
+        });
+        heightSpinner.valueProperty().addListener((observable, oldValue, newValue) -> {
+            if (mode.equalsIgnoreCase("select")) {
+                graphicsContext.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+                shapeRepository.drawShapes(graphicsContext);
+            }
+        });
+        radiusSpinner.valueProperty().addListener((observable, oldValue, newValue) -> {
+            if (mode.equalsIgnoreCase("select")) {
+                graphicsContext.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+                shapeRepository.drawShapes(graphicsContext);
+            }
+        });
     }
 
     @FXML
@@ -89,14 +115,37 @@ public class PaintController {
     @FXML
     public void onCanvasClicked(MouseEvent mouseEvent) {
         if (mode.equalsIgnoreCase("select")) {
+            if (selectedShape != null) {
+                Class<? extends Shape> shapeClass = selectedShape.getClass();
+                if (shapeClass.equals(CircleEditable.class)) {
+                    CircleEditable circle = (CircleEditable) selectedShape;
+                    circle.radiusProperty().unbind();
+                } else if (shapeClass.equals(RectangleEditable.class)) {
+                    RectangleEditable rectangle = (RectangleEditable) selectedShape;
+                    rectangle.widthProperty().unbind();
+                    rectangle.heightProperty().unbind();
+                }
+            }
+
             selectedShape = shapeRepository.getSelectedShape(mouseEvent);
             if (selectedShape == null) {
                 return;
             }
             colorPicker.setValue((Color) selectedShape.getFill());
 
-            graphicsContext.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-            shapeRepository.drawShapes(graphicsContext);
+            Class<? extends Shape> shapeClass = selectedShape.getClass();
+            if (shapeClass.equals(CircleEditable.class)) {
+                CircleEditable circle = (CircleEditable) selectedShape;
+                radiusSpinnerValueFactory.setValue(circle.getRadius());
+                circle.radiusProperty().bind(radiusSpinner.valueProperty());
+            } else if (shapeClass.equals(RectangleEditable.class)) {
+                RectangleEditable rectangle = (RectangleEditable) selectedShape;
+                widthSpinnerValueFactory.setValue(rectangle.getWidth());
+                heightSpinnerValueFactory.setValue(rectangle.getHeight());
+                rectangle.widthProperty().bind(widthSpinner.valueProperty());
+                rectangle.heightProperty().bind(heightSpinner.valueProperty());
+            }
+
             System.out.println(selectedShape.getFill());
 
         } else {
