@@ -14,6 +14,9 @@ import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Shape;
+import javafx.stage.FileChooser;
+
+import java.io.File;
 
 public class PaintController {
 
@@ -27,6 +30,9 @@ public class PaintController {
     private Button circleButton;
     @FXML
     private Button rectangleButton;
+
+    @FXML
+    public Button saveButton;
 
     @FXML
     private Spinner<Double> widthSpinner;
@@ -44,6 +50,8 @@ public class PaintController {
     private ShapeFactory shapeFactory;
     private ShapeRepository shapeRepository;
     private Shape selectedShape;
+
+    private FileChooser fileChooser;
 
     private String mode = "rectangle";
 
@@ -70,6 +78,9 @@ public class PaintController {
 
         shapeFactory = new ShapeFactory();
         shapeRepository = new ShapeRepository();
+
+        fileChooser = new FileChooser();
+        fileChooser.setInitialFileName("image.svg");
 
         widthSpinner.valueProperty().addListener((observable, oldValue, newValue) -> {
             if (mode.equalsIgnoreCase("select")) {
@@ -111,6 +122,13 @@ public class PaintController {
         rectangleButton.setDisable(false);
         mode = "select";
     }
+
+    @FXML
+    public void onSaveButtonClick() {
+        File selectedFile = fileChooser.showSaveDialog(canvas.getScene().getWindow());
+        shapeRepository.saveToSvg(selectedFile);
+    }
+
 
     @FXML
     public void onCanvasClicked(MouseEvent mouseEvent) {
