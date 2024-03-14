@@ -1,9 +1,6 @@
 package com.example.simplepaintprogram.controller;
 
-import com.example.simplepaintprogram.model.CircleEditable;
-import com.example.simplepaintprogram.model.RectangleEditable;
-import com.example.simplepaintprogram.model.ShapeFactory;
-import com.example.simplepaintprogram.model.ShapeRepository;
+import com.example.simplepaintprogram.model.*;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -13,10 +10,11 @@ import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Shape;
 import javafx.stage.FileChooser;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 public class PaintController {
 
@@ -40,16 +38,14 @@ public class PaintController {
     private Spinner<Double> heightSpinner;
     @FXML
     private Spinner<Double> radiusSpinner;
-
-    private SpinnerValueFactory.DoubleSpinnerValueFactory widthSpinnerValueFactory;
-    private SpinnerValueFactory.DoubleSpinnerValueFactory heightSpinnerValueFactory;
-    private SpinnerValueFactory.DoubleSpinnerValueFactory radiusSpinnerValueFactory;
+    private List<Spinner<Double>> spinners;
+    private List<SpinnerValueFactory.DoubleSpinnerValueFactory> spinnerValueFactories;
 
     private GraphicsContext graphicsContext;
 
     private ShapeFactory shapeFactory;
     private ShapeRepository shapeRepository;
-    private Shape selectedShape;
+    private ShapeEditable selectedShape;
 
     private FileChooser fileChooser;
 
@@ -69,18 +65,32 @@ public class PaintController {
             }
         });
 
-        widthSpinnerValueFactory = new SpinnerValueFactory.DoubleSpinnerValueFactory(0, Double.MAX_VALUE);
-        widthSpinner.setValueFactory(widthSpinnerValueFactory);
-        heightSpinnerValueFactory = new SpinnerValueFactory.DoubleSpinnerValueFactory(0, Double.MAX_VALUE);
-        heightSpinner.setValueFactory(heightSpinnerValueFactory);
-        radiusSpinnerValueFactory = new SpinnerValueFactory.DoubleSpinnerValueFactory(0, Double.MAX_VALUE);
-        radiusSpinner.setValueFactory(radiusSpinnerValueFactory);
-
         shapeFactory = new ShapeFactory();
         shapeRepository = new ShapeRepository();
 
+        initializeSpinners();
+
         fileChooser = new FileChooser();
         fileChooser.setInitialFileName("image.svg");
+    }
+
+    private void initializeSpinners() {
+        SpinnerValueFactory.DoubleSpinnerValueFactory widthSpinnerValueFactory = new SpinnerValueFactory.DoubleSpinnerValueFactory(0, Double.MAX_VALUE);
+        widthSpinner.setValueFactory(widthSpinnerValueFactory);
+        SpinnerValueFactory.DoubleSpinnerValueFactory heightSpinnerValueFactory = new SpinnerValueFactory.DoubleSpinnerValueFactory(0, Double.MAX_VALUE);
+        heightSpinner.setValueFactory(heightSpinnerValueFactory);
+        SpinnerValueFactory.DoubleSpinnerValueFactory radiusSpinnerValueFactory = new SpinnerValueFactory.DoubleSpinnerValueFactory(0, Double.MAX_VALUE);
+        radiusSpinner.setValueFactory(radiusSpinnerValueFactory);
+
+        spinnerValueFactories = new ArrayList<>(3);
+        spinnerValueFactories.add(widthSpinnerValueFactory);
+        spinnerValueFactories.add(heightSpinnerValueFactory);
+        spinnerValueFactories.add(radiusSpinnerValueFactory);
+
+        spinners = new ArrayList<>(3);
+        spinners.add(widthSpinner);
+        spinners.add(heightSpinner);
+        spinners.add(radiusSpinner);
 
         widthSpinner.valueProperty().addListener((observable, oldValue, newValue) -> {
             if (mode.equalsIgnoreCase("select")) {
@@ -134,15 +144,7 @@ public class PaintController {
     public void onCanvasClicked(MouseEvent mouseEvent) {
         if (mode.equalsIgnoreCase("select")) {
             if (selectedShape != null) {
-                Class<? extends Shape> shapeClass = selectedShape.getClass();
-                if (shapeClass.equals(CircleEditable.class)) {
-                    CircleEditable circle = (CircleEditable) selectedShape;
-                    circle.radiusProperty().unbind();
-                } else if (shapeClass.equals(RectangleEditable.class)) {
-                    RectangleEditable rectangle = (RectangleEditable) selectedShape;
-                    rectangle.widthProperty().unbind();
-                    rectangle.heightProperty().unbind();
-                }
+                selectedShape.unbindAll();
             }
 
             selectedShape = shapeRepository.getSelectedShape(mouseEvent);
@@ -151,41 +153,18 @@ public class PaintController {
             }
             colorPicker.setValue((Color) selectedShape.getFill());
 
-            Class<? extends Shape> shapeClass = selectedShape.getClass();
-            if (shapeClass.equals(CircleEditable.class)) {
-                CircleEditable circle = (CircleEditable) selectedShape;
-                radiusSpinnerValueFactory.setValue(circle.getRadius());
-                circle.radiusProperty().bind(radiusSpinner.valueProperty());
-            } else if (shapeClass.equals(RectangleEditable.class)) {
-                RectangleEditable rectangle = (RectangleEditable) selectedShape;
-                widthSpinnerValueFactory.setValue(rectangle.getWidth());
-                heightSpinnerValueFactory.setValue(rectangle.getHeight());
-                rectangle.widthProperty().bind(widthSpinner.valueProperty());
-                rectangle.heightProperty().bind(heightSpinner.valueProperty());
-            }
+            selectedShape.bindToSpinners(spinnerValueFactories, spinners);
 
             System.out.println(selectedShape.getFill());
 
         } else {
-            Shape shape = shapeFactory.getShape(mode);
+            ShapeEditable shape = shapeFactory.getShape(mode, mouseEvent, spinners);
             shapeRepository.addShape(shape);
 
             graphicsContext.setFill(colorPicker.getValue());
             shape.setFill(graphicsContext.getFill());
-            if (mode.equals("rectangle")) {
-                RectangleEditable rectangle = (RectangleEditable) shape;
-                rectangle.setX(mouseEvent.getX());
-                rectangle.setY(mouseEvent.getY());
-                rectangle.setWidth(widthSpinner.getValue());
-                rectangle.setHeight(heightSpinner.getValue());
-                rectangle.draw(graphicsContext);
-            } else if (mode.equals("circle")) {
-                CircleEditable circle = (CircleEditable) shape;
-                circle.setCenterX(mouseEvent.getX());
-                circle.setCenterY(mouseEvent.getY());
-                circle.setRadius(radiusSpinner.getValue());
-                circle.draw(graphicsContext);
-            }
+
+            shape.draw(graphicsContext);
         }
     }
 }
