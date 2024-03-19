@@ -1,7 +1,6 @@
 package com.example.simplepaintprogram.model;
 
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.shape.Rectangle;
@@ -27,18 +26,11 @@ public class RectangleEditable extends Rectangle implements ShapeEditable {
     }
 
     @Override
-    public void bindToSpinners(List<SpinnerValueFactory.DoubleSpinnerValueFactory> spinnerValueFactories, List<Spinner<Double>> spinners) {
+    public void setSpinners(List<SpinnerValueFactory.DoubleSpinnerValueFactory> spinnerValueFactories) {
         spinnerValueFactories.get(0).setValue(getWidth());
         spinnerValueFactories.get(1).setValue(getHeight());
-        widthProperty().bind(spinners.get(0).valueProperty());
-        heightProperty().bind(spinners.get(1).valueProperty());
     }
 
-    @Override
-    public void unbindAll() {
-        widthProperty().unbind();
-        heightProperty().unbind();
-    }
 
     @Override
     public String toXml() {

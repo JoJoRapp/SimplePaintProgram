@@ -1,7 +1,6 @@
 package com.example.simplepaintprogram.model;
 
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.shape.Circle;
@@ -27,14 +26,8 @@ public class CircleEditable extends Circle implements ShapeEditable {
     }
 
     @Override
-    public void bindToSpinners(List<SpinnerValueFactory.DoubleSpinnerValueFactory> spinnerValueFactories, List<Spinner<Double>> spinners) {
+    public void setSpinners(List<SpinnerValueFactory.DoubleSpinnerValueFactory> spinnerValueFactories) {
         spinnerValueFactories.get(2).setValue(getRadius());
-        radiusProperty().bind(spinners.get(2).valueProperty());
-    }
-
-    @Override
-    public void unbindAll() {
-        radiusProperty().unbind();
     }
 
     @Override

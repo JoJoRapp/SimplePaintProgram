@@ -43,6 +43,8 @@ public class PaintController {
 
     private GraphicsContext graphicsContext;
 
+    private InteractionInvoker invoker;
+
     private ShapeFactory shapeFactory;
     private ShapeRepository shapeRepository;
     private ShapeEditable selectedShape;
@@ -59,11 +61,13 @@ public class PaintController {
             System.out.println("colorPicker" + colorPicker.getValue());
 
             if (mode.equalsIgnoreCase("select")) {
-                selectedShape.setFill(colorPicker.getValue());
+                invoker.runCommand(new ChangeShapeColor(selectedShape, colorPicker.getValue()));
                 graphicsContext.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
                 shapeRepository.drawShapes(graphicsContext);
             }
         });
+
+        invoker = new InteractionInvoker();
 
         shapeFactory = new ShapeFactory();
         shapeRepository = new ShapeRepository();
@@ -93,21 +97,31 @@ public class PaintController {
         spinners.add(radiusSpinner);
 
         widthSpinner.valueProperty().addListener((observable, oldValue, newValue) -> {
-            if (mode.equalsIgnoreCase("select")) {
-                graphicsContext.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-                shapeRepository.drawShapes(graphicsContext);
+            if (selectedShape != null) {
+                if (mode.equalsIgnoreCase("select") && selectedShape.getClass().equals(RectangleEditable.class)) {
+                    invoker.runCommand(new ChangeRectangleWidth((RectangleEditable) selectedShape, newValue));
+                    graphicsContext.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+                    shapeRepository.drawShapes(graphicsContext);
+                }
             }
         });
         heightSpinner.valueProperty().addListener((observable, oldValue, newValue) -> {
-            if (mode.equalsIgnoreCase("select")) {
-                graphicsContext.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-                shapeRepository.drawShapes(graphicsContext);
+            if (selectedShape != null) {
+                if (mode.equalsIgnoreCase("select") && selectedShape.getClass().equals(RectangleEditable.class)) {
+                    invoker.runCommand(new ChangeRectangleHeight((RectangleEditable) selectedShape, newValue));
+                    graphicsContext.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+                    shapeRepository.drawShapes(graphicsContext);
+                }
             }
         });
         radiusSpinner.valueProperty().addListener((observable, oldValue, newValue) -> {
-            if (mode.equalsIgnoreCase("select")) {
-                graphicsContext.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-                shapeRepository.drawShapes(graphicsContext);
+            if (selectedShape != null) {
+                if (mode.equalsIgnoreCase("select") && selectedShape.getClass().equals(CircleEditable.class)) {
+                    CircleEditable circle = (CircleEditable) selectedShape;
+                    circle.setRadius(newValue);
+                    graphicsContext.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+                    shapeRepository.drawShapes(graphicsContext);
+                }
             }
         });
     }
@@ -143,26 +157,21 @@ public class PaintController {
     @FXML
     public void onCanvasClicked(MouseEvent mouseEvent) {
         if (mode.equalsIgnoreCase("select")) {
-            if (selectedShape != null) {
-                selectedShape.unbindAll();
-            }
-
             selectedShape = shapeRepository.getSelectedShape(mouseEvent);
             if (selectedShape == null) {
                 return;
             }
             colorPicker.setValue((Color) selectedShape.getFill());
-
-            selectedShape.bindToSpinners(spinnerValueFactories, spinners);
+            selectedShape.setSpinners(spinnerValueFactories);
 
             System.out.println(selectedShape.getFill());
 
         } else {
             ShapeEditable shape = shapeFactory.getShape(mode, mouseEvent, spinners);
-            shapeRepository.addShape(shape);
-
             graphicsContext.setFill(colorPicker.getValue());
             shape.setFill(graphicsContext.getFill());
+
+            invoker.runCommand(new AddShape(shape, shapeRepository));
 
             shape.draw(graphicsContext);
         }
