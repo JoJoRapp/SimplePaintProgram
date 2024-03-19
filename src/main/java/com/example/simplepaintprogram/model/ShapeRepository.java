@@ -21,6 +21,10 @@ public class ShapeRepository {
         shapes.add(shape);
     }
 
+    public void removeShape(ShapeEditable shape) {
+        shapes.remove(shape);
+    }
+
     public ShapeEditable getSelectedShape(MouseEvent mouseEvent) {
         for (int i = shapes.size() - 1; i >= 0; i--) {
             ShapeEditable currentShape = shapes.get(i);

@@ -6,10 +6,12 @@ public class ChangeRectangleHeight implements ShapeInteraction {
 
     private final RectangleEditable rectangle;
     private final double height;
+    private final double oldHeight;
 
     public ChangeRectangleHeight(RectangleEditable rectangle, double height) {
         this.rectangle = rectangle;
         this.height = height;
+        oldHeight = rectangle.getHeight();
     }
 
     @Override
@@ -19,6 +21,6 @@ public class ChangeRectangleHeight implements ShapeInteraction {
 
     @Override
     public void undo() {
-
+        rectangle.setHeight(oldHeight);
     }
 }

@@ -20,6 +20,6 @@ public class AddShape implements ShapeInteraction {
 
     @Override
     public void undo() {
-
+        shapeRepository.removeShape(shape);
     }
 }

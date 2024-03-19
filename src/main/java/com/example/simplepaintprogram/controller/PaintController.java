@@ -62,8 +62,7 @@ public class PaintController {
 
             if (mode.equalsIgnoreCase("select")) {
                 invoker.runCommand(new ChangeShapeColor(selectedShape, colorPicker.getValue()));
-                graphicsContext.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-                shapeRepository.drawShapes(graphicsContext);
+                updateCanvas();
             }
         });
 
@@ -100,8 +99,7 @@ public class PaintController {
             if (selectedShape != null) {
                 if (mode.equalsIgnoreCase("select") && selectedShape.getClass().equals(RectangleEditable.class)) {
                     invoker.runCommand(new ChangeRectangleWidth((RectangleEditable) selectedShape, newValue));
-                    graphicsContext.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-                    shapeRepository.drawShapes(graphicsContext);
+                    updateCanvas();
                 }
             }
         });
@@ -109,21 +107,23 @@ public class PaintController {
             if (selectedShape != null) {
                 if (mode.equalsIgnoreCase("select") && selectedShape.getClass().equals(RectangleEditable.class)) {
                     invoker.runCommand(new ChangeRectangleHeight((RectangleEditable) selectedShape, newValue));
-                    graphicsContext.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-                    shapeRepository.drawShapes(graphicsContext);
+                    updateCanvas();
                 }
             }
         });
         radiusSpinner.valueProperty().addListener((observable, oldValue, newValue) -> {
             if (selectedShape != null) {
                 if (mode.equalsIgnoreCase("select") && selectedShape.getClass().equals(CircleEditable.class)) {
-                    CircleEditable circle = (CircleEditable) selectedShape;
-                    circle.setRadius(newValue);
-                    graphicsContext.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-                    shapeRepository.drawShapes(graphicsContext);
+                    invoker.runCommand(new ChangeCircleRadius((CircleEditable) selectedShape, newValue));
+                    updateCanvas();
                 }
             }
         });
+    }
+
+    private void updateCanvas() {
+        graphicsContext.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+        shapeRepository.drawShapes(graphicsContext);
     }
 
     @FXML
@@ -145,6 +145,18 @@ public class PaintController {
         circleButton.setDisable(false);
         rectangleButton.setDisable(false);
         mode = "select";
+    }
+
+    @FXML
+    public void onUndoButtonClick() {
+        invoker.undo();
+        updateCanvas();
+    }
+
+    @FXML
+    public void onRedoButtonClick() {
+        invoker.redo();
+        updateCanvas();
     }
 
     @FXML

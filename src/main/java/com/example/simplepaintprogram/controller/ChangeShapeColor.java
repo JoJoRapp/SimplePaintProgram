@@ -7,10 +7,12 @@ public class ChangeShapeColor implements ShapeInteraction {
 
     private final ShapeEditable shape;
     private final Paint paint;
+    private final Paint oldPaint;
 
     public ChangeShapeColor(ShapeEditable shape, Paint paint) {
         this.shape = shape;
         this.paint = paint;
+        oldPaint = shape.getFill();
     }
 
     @Override
@@ -20,6 +22,6 @@ public class ChangeShapeColor implements ShapeInteraction {
 
     @Override
     public void undo() {
-
+        shape.setFill(oldPaint);
     }
 }
