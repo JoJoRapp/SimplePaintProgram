@@ -25,6 +25,14 @@ public class ShapeRepository {
         shapes.remove(shape);
     }
 
+    public ShapeEditable getShape(int i) {
+        return shapes.get(i);
+    }
+
+    public int getSize() {
+        return shapes.size();
+    }
+
     public ShapeEditable getSelectedShape(MouseEvent mouseEvent) {
         for (int i = shapes.size() - 1; i >= 0; i--) {
             ShapeEditable currentShape = shapes.get(i);
