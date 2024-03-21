@@ -60,7 +60,7 @@ public class PaintController {
 
             System.out.println("colorPicker" + colorPicker.getValue());
 
-            if (mode.equalsIgnoreCase("select")) {
+            if (mode.equalsIgnoreCase("select") && selectedShape != null) {
                 invoker.runCommand(new ChangeShapeColor(selectedShape, colorPicker.getValue()));
                 updateCanvas();
             }

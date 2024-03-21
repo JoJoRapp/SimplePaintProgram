@@ -15,8 +15,9 @@ public class CircleEditable extends Circle implements ShapeEditable {
 
     @Override
     public boolean wasClicked(MouseEvent mouseEvent) {
-        return mouseEvent.getX() >= getCenterX() && mouseEvent.getX() <= getCenterX() + getRadius() * 2 &&
-                mouseEvent.getY() >= getCenterY() && mouseEvent.getY() <= getCenterY() + getRadius() * 2;
+        double dX = getCenterX() + getRadius() - mouseEvent.getX();
+        double dY = getCenterY() + getRadius() - mouseEvent.getY();
+        return Math.sqrt((dX * dX) + (dY * dY)) <= getRadius();
     }
 
     @Override
