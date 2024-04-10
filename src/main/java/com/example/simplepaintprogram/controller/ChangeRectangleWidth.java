@@ -23,4 +23,9 @@ public class ChangeRectangleWidth implements ShapeInteraction {
     public void undo() {
         rectangle.setWidth(oldWidth);
     }
+
+    @Override
+    public String toString() {
+        return "width " + rectangle.toXml();
+    }
 }

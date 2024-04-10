@@ -11,6 +11,12 @@ public class RectangleEditable extends Rectangle implements ShapeEditable {
 
     public RectangleEditable(double v, double v1, double v2, double v3) {
         super(v, v1, v2, v3);
+        setId(Long.toString(random.nextLong()));
+    }
+
+    public RectangleEditable(double v, double v1, double v2, double v3, String id) {
+        super(v, v1, v2, v3);
+        setId(id);
     }
 
     @Override
@@ -35,17 +41,19 @@ public class RectangleEditable extends Rectangle implements ShapeEditable {
     @Override
     public String toXml() {
         StringBuilder sb = new StringBuilder("<rect x=\"");
-        sb.append(getX());
-        sb.append("\" y=\"");
-        sb.append(getY());
-        sb.append("\" width=\"");
-        sb.append(getWidth());
-        sb.append("\" height=\"");
-        sb.append(getHeight());
-        sb.append("\" stroke=\"black\" fill=\"");
-        sb.append(getFill());
-        sb.replace(sb.lastIndexOf("0x"), sb.lastIndexOf("0x") + 2, "#");
-        sb.append("\"/>");
+        sb.append(getX())
+                .append("\" y=\"")
+                .append(getY())
+                .append("\" width=\"")
+                .append(getWidth())
+                .append("\" height=\"")
+                .append(getHeight())
+                .append("\" stroke=\"black\" fill=\"")
+                .append(getFill())
+                .replace(sb.lastIndexOf("0x"), sb.lastIndexOf("0x") + 2, "#")
+                .append("\" id=\"")
+                .append(getId())
+                .append("\"/>");
         return sb.toString();
     }
 }

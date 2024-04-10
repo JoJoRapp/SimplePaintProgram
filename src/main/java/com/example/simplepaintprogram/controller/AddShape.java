@@ -22,4 +22,9 @@ public class AddShape implements ShapeInteraction {
     public void undo() {
         shapeRepository.removeShape(shape);
     }
+
+    @Override
+    public String toString() {
+        return "add " + shape.toXml();
+    }
 }

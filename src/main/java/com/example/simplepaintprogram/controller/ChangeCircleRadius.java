@@ -23,4 +23,9 @@ public class ChangeCircleRadius implements ShapeInteraction {
     public void undo() {
         circle.setRadius(oldRadius);
     }
+
+    @Override
+    public String toString() {
+        return "radius " + circle.toXml();
+    }
 }

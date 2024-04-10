@@ -33,6 +33,9 @@ public class PaintController {
     public Button saveButton;
 
     @FXML
+    public Button connectButton;
+
+    @FXML
     private Spinner<Double> widthSpinner;
     @FXML
     private Spinner<Double> heightSpinner;
@@ -51,25 +54,25 @@ public class PaintController {
 
     private FileChooser fileChooser;
 
+    private Client client;
+
     private String mode = "rectangle";
 
     @FXML
     public void initialize() {
         graphicsContext = canvas.getGraphicsContext2D();
         colorPicker.setOnAction(e -> {
-
-            System.out.println("colorPicker" + colorPicker.getValue());
-
             if (mode.equalsIgnoreCase("select") && selectedShape != null) {
                 invoker.runCommand(new ChangeShapeColor(selectedShape, colorPicker.getValue()));
                 updateCanvas();
             }
         });
 
-        invoker = new InteractionInvoker();
-
         shapeFactory = new ShapeFactory();
         shapeRepository = new ShapeRepository();
+
+        invoker = new InteractionInvoker();
+        client = new Client(invoker, shapeFactory, shapeRepository, graphicsContext, canvas);
 
         initializeSpinners();
 
@@ -179,7 +182,14 @@ public class PaintController {
             System.out.println(selectedShape.getFill());
 
         } else {
-            ShapeEditable shape = shapeFactory.getShape(mode, mouseEvent, spinners);
+            ShapeEditable shape = shapeFactory.getShape(
+                    mode,
+                    mouseEvent.getX(),
+                    mouseEvent.getY(),
+                    spinners.get(0).getValue(),
+                    spinners.get(1).getValue(),
+                    spinners.get(2).getValue()
+            );
             graphicsContext.setFill(colorPicker.getValue());
             shape.setFill(graphicsContext.getFill());
 
@@ -187,5 +197,20 @@ public class PaintController {
 
             shape.draw(graphicsContext);
         }
+    }
+
+    @FXML
+    public void onConnectButtonClick() {
+        Thread clientThread = new Thread(client);
+        clientThread.start();
+        while (!client.isConnected()) {
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        connectButton.setDisable(true);
+        invoker = new InteractionSender(client);
     }
 }

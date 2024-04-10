@@ -1,7 +1,7 @@
 package com.example.simplepaintprogram.controller;
 
-import com.example.simplepaintprogram.model.CircleEditable;
 import com.example.simplepaintprogram.model.ShapeEditable;
+import com.example.simplepaintprogram.model.ShapeFactory;
 import com.example.simplepaintprogram.model.ShapeRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -10,8 +10,9 @@ public class InteractionInvokerTest {
 
     InteractionInvoker invoker = new InteractionInvoker();
     ShapeRepository shapeRepository = new ShapeRepository();
+    ShapeFactory shapeFactory = new ShapeFactory();
 
-    ShapeEditable shape = new CircleEditable(10, 5, 20);
+    ShapeEditable shape = shapeFactory.getShape("circle", 10, 5, 0, 0, 20);
 
     @Test
     void testRunCommandAddShape() {

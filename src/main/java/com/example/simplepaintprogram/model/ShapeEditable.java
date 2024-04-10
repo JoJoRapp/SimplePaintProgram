@@ -6,8 +6,12 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Paint;
 
 import java.util.List;
+import java.util.Random;
 
 public interface ShapeEditable {
+
+    Random random = new Random();
+
     boolean wasClicked(MouseEvent mouseEvent);
 
     void draw(GraphicsContext graphicsContext);
@@ -19,4 +23,6 @@ public interface ShapeEditable {
     void setFill(Paint paint);
 
     Paint getFill();
+
+    String getId();
 }

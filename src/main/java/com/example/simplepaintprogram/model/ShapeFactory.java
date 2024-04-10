@@ -1,16 +1,21 @@
 package com.example.simplepaintprogram.model;
 
-import javafx.scene.control.Spinner;
-import javafx.scene.input.MouseEvent;
-
-import java.util.List;
-
 public class ShapeFactory {
-    public ShapeEditable getShape(String shape, MouseEvent mouseEvent, List<Spinner<Double>> spinners) {
+    public ShapeEditable getShape(String shape, double x, double y, double width, double height, double radius) {
         if (shape.equalsIgnoreCase("CIRCLE")) {
-            return new CircleEditable(mouseEvent.getX(), mouseEvent.getY(), spinners.get(2).getValue());
+            return new CircleEditable(x, y, radius);
         } else if (shape.equalsIgnoreCase("RECTANGLE")) {
-            return new RectangleEditable(mouseEvent.getX(), mouseEvent.getY(), spinners.get(0).getValue(), spinners.get(1).getValue());
+            return new RectangleEditable(x, y, width, height);
+        } else {
+            return null;
+        }
+    }
+
+    public ShapeEditable getShape(String shape, double x, double y, double width, double height, double radius, String id) {
+        if (shape.equalsIgnoreCase("CIRCLE")) {
+            return new CircleEditable(x, y, radius, id);
+        } else if (shape.equalsIgnoreCase("RECTANGLE")) {
+            return new RectangleEditable(x, y, width, height, id);
         } else {
             return null;
         }

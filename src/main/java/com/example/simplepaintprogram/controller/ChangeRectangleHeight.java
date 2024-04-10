@@ -23,4 +23,9 @@ public class ChangeRectangleHeight implements ShapeInteraction {
     public void undo() {
         rectangle.setHeight(oldHeight);
     }
+
+    @Override
+    public String toString() {
+        return "height " + rectangle.toXml();
+    }
 }

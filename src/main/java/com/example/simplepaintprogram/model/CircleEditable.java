@@ -11,6 +11,12 @@ public class CircleEditable extends Circle implements ShapeEditable {
 
     public CircleEditable(double v, double v1, double v2) {
         super(v, v1, v2);
+        setId(Long.toString(random.nextLong()));
+    }
+
+    public CircleEditable(double v, double v1, double v2, String id) {
+        super(v, v1, v2);
+        setId(id);
     }
 
     @Override
@@ -34,15 +40,17 @@ public class CircleEditable extends Circle implements ShapeEditable {
     @Override
     public String toXml() {
         StringBuilder sb = new StringBuilder("<circle cx=\"");
-        sb.append(getCenterX() + getRadius());
-        sb.append("\" cy=\"");
-        sb.append(getCenterY() + getRadius());
-        sb.append("\" r=\"");
-        sb.append(getRadius());
-        sb.append("\" stroke=\"black\" fill=\"");
-        sb.append(getFill());
-        sb.replace(sb.lastIndexOf("0x"), sb.lastIndexOf("0x") + 2, "#");
-        sb.append("\"/>");
+        sb.append(getCenterX() + getRadius())
+                .append("\" cy=\"")
+                .append(getCenterY() + getRadius())
+                .append("\" r=\"")
+                .append(getRadius())
+                .append("\" stroke=\"black\" fill=\"")
+                .append(getFill())
+                .replace(sb.lastIndexOf("0x"), sb.lastIndexOf("0x") + 2, "#")
+                .append("\" id=\"")
+                .append(getId())
+                .append("\"/>");
         return sb.toString();
     }
 }

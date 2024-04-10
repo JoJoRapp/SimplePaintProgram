@@ -43,6 +43,16 @@ public class ShapeRepository {
         return null;
     }
 
+    public ShapeEditable getSelectedShape(String id) {
+        for (int i = shapes.size() - 1; i >= 0; i--) {
+            ShapeEditable currentShape = shapes.get(i);
+            if (currentShape.getId().equalsIgnoreCase(id)) {
+                return currentShape;
+            }
+        }
+        return null;
+    }
+
     public void drawShapes(GraphicsContext graphicsContext) {
         for (ShapeEditable s : shapes) {
             graphicsContext.setFill(s.getFill());
