@@ -28,6 +28,8 @@ public class PaintController {
     private Button circleButton;
     @FXML
     private Button rectangleButton;
+    @FXML
+    public Button selectButton;
 
     @FXML
     public Button saveButton;
@@ -133,6 +135,7 @@ public class PaintController {
     public void onRectangleButtonClick() {
         rectangleButton.setDisable(true);
         circleButton.setDisable(false);
+        selectButton.setDisable(false);
         mode = "rectangle";
     }
 
@@ -140,11 +143,13 @@ public class PaintController {
     public void onCircleButtonClick() {
         circleButton.setDisable(true);
         rectangleButton.setDisable(false);
+        selectButton.setDisable(false);
         mode = "circle";
     }
 
     @FXML
     public void onSelectButtonClick() {
+        selectButton.setDisable(true);
         circleButton.setDisable(false);
         rectangleButton.setDisable(false);
         mode = "select";
@@ -178,8 +183,6 @@ public class PaintController {
             }
             colorPicker.setValue((Color) selectedShape.getFill());
             selectedShape.setSpinners(spinnerValueFactories);
-
-            System.out.println(selectedShape.getFill());
 
         } else {
             ShapeEditable shape = shapeFactory.getShape(

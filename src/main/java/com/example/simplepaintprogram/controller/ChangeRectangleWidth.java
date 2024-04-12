@@ -11,12 +11,16 @@ public class ChangeRectangleWidth implements ShapeInteraction {
     public ChangeRectangleWidth(RectangleEditable rectangle, double width) {
         this.rectangle = rectangle;
         this.width = width;
-        oldWidth = rectangle.getWidth();
+        if (rectangle != null)
+            oldWidth = rectangle.getWidth();
+        else
+            oldWidth = 0;
     }
 
     @Override
     public void execute() {
-        rectangle.setWidth(width);
+        if (rectangle != null)
+            rectangle.setWidth(width);
     }
 
     @Override

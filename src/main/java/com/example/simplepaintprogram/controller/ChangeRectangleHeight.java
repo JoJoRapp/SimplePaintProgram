@@ -11,12 +11,16 @@ public class ChangeRectangleHeight implements ShapeInteraction {
     public ChangeRectangleHeight(RectangleEditable rectangle, double height) {
         this.rectangle = rectangle;
         this.height = height;
-        oldHeight = rectangle.getHeight();
+        if (rectangle != null)
+            oldHeight = rectangle.getHeight();
+        else
+            oldHeight = 0;
     }
 
     @Override
     public void execute() {
-        rectangle.setHeight(height);
+        if (rectangle != null)
+            rectangle.setHeight(height);
     }
 
     @Override

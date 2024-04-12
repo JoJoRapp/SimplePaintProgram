@@ -11,12 +11,16 @@ public class ChangeCircleRadius implements ShapeInteraction {
     public ChangeCircleRadius(CircleEditable circle, double radius) {
         this.circle = circle;
         this.radius = radius;
-        oldRadius = circle.getRadius();
+        if (circle != null)
+            oldRadius = circle.getRadius();
+        else
+            oldRadius = 0;
     }
 
     @Override
     public void execute() {
-        circle.setRadius(radius);
+        if (circle != null)
+            circle.setRadius(radius);
     }
 
     @Override

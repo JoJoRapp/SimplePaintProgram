@@ -53,7 +53,7 @@
                   <Color />
               </value>
            </ColorPicker>
-         <Button mnemonicParsing="false" onAction="#onSelectButtonClick" text="Select" GridPane.columnIndex="7" GridPane.rowSpan="2147483647" />
+         <Button fx:id="selectButton" mnemonicParsing="false" onAction="#onSelectButtonClick" text="Select" GridPane.columnIndex="7" GridPane.rowSpan="2147483647" />
          <Button fx:id="saveButton" mnemonicParsing="false" onAction="#onSaveButtonClick" text="Save" GridPane.columnIndex="9" GridPane.rowSpan="2147483647" />
          <Label text="Height:" GridPane.columnIndex="1" GridPane.rowIndex="1" />
          <Spinner fx:id="heightSpinner" editable="true" prefWidth="120.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />

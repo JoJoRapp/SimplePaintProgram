@@ -20,7 +20,8 @@ public class ChangeShapeColor implements ShapeInteraction {
 
     @Override
     public void execute() {
-        shape.setFill(paint);
+        if (shape != null)
+            shape.setFill(paint);
     }
 
     @Override
